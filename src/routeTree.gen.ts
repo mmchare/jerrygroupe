@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as GlobalPresenceRouteImport } from './routes/global-presence'
+import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as SubmitProposalRouteImport } from './routes/submit-proposal'
+import { Route as DivisionsIndexRouteImport } from './routes/divisions.index'
+import { Route as DivisionsSlugRouteImport } from './routes/divisions.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlobalPresenceRoute = GlobalPresenceRouteImport.update({
+  id: '/global-presence',
+  path: '/global-presence',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeadershipRoute = LeadershipRouteImport.update({
+  id: '/leadership',
+  path: '/leadership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubmitProposalRoute = SubmitProposalRouteImport.update({
+  id: '/submit-proposal',
+  path: '/submit-proposal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DivisionsIndexRoute = DivisionsIndexRouteImport.update({
+  id: '/divisions/',
+  path: '/divisions/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DivisionsSlugRoute = DivisionsSlugRouteImport.update({
+  id: '/divisions/$slug',
+  path: '/divisions/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/global-presence': typeof GlobalPresenceRoute
+  '/leadership': typeof LeadershipRoute
+  '/submit-proposal': typeof SubmitProposalRoute
+  '/divisions/$slug': typeof DivisionsSlugRoute
+  '/divisions/': typeof DivisionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/global-presence': typeof GlobalPresenceRoute
+  '/leadership': typeof LeadershipRoute
+  '/submit-proposal': typeof SubmitProposalRoute
+  '/divisions/$slug': typeof DivisionsSlugRoute
+  '/divisions': typeof DivisionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/global-presence': typeof GlobalPresenceRoute
+  '/leadership': typeof LeadershipRoute
+  '/submit-proposal': typeof SubmitProposalRoute
+  '/divisions/$slug': typeof DivisionsSlugRoute
+  '/divisions/': typeof DivisionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/global-presence'
+    | '/leadership'
+    | '/submit-proposal'
+    | '/divisions/$slug'
+    | '/divisions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/global-presence'
+    | '/leadership'
+    | '/submit-proposal'
+    | '/divisions/$slug'
+    | '/divisions'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/global-presence'
+    | '/leadership'
+    | '/submit-proposal'
+    | '/divisions/$slug'
+    | '/divisions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  GlobalPresenceRoute: typeof GlobalPresenceRoute
+  LeadershipRoute: typeof LeadershipRoute
+  SubmitProposalRoute: typeof SubmitProposalRoute
+  DivisionsSlugRoute: typeof DivisionsSlugRoute
+  DivisionsIndexRoute: typeof DivisionsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/global-presence': {
+      id: '/global-presence'
+      path: '/global-presence'
+      fullPath: '/global-presence'
+      preLoaderRoute: typeof GlobalPresenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leadership': {
+      id: '/leadership'
+      path: '/leadership'
+      fullPath: '/leadership'
+      preLoaderRoute: typeof LeadershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/submit-proposal': {
+      id: '/submit-proposal'
+      path: '/submit-proposal'
+      fullPath: '/submit-proposal'
+      preLoaderRoute: typeof SubmitProposalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/divisions/': {
+      id: '/divisions/'
+      path: '/divisions'
+      fullPath: '/divisions/'
+      preLoaderRoute: typeof DivisionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/divisions/$slug': {
+      id: '/divisions/$slug'
+      path: '/divisions/$slug'
+      fullPath: '/divisions/$slug'
+      preLoaderRoute: typeof DivisionsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  GlobalPresenceRoute: GlobalPresenceRoute,
+  LeadershipRoute: LeadershipRoute,
+  SubmitProposalRoute: SubmitProposalRoute,
+  DivisionsSlugRoute: DivisionsSlugRoute,
+  DivisionsIndexRoute: DivisionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
