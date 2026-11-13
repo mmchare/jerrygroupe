@@ -173,9 +173,14 @@ function HomePage() {
                 <p className="eyebrow">{t.home.oppEyebrow}</p>
                 <h2 className="mt-4 text-4xl font-medium leading-tight text-navy md:text-5xl">{t.home.oppTitle}</h2>
                 <p className="mt-6 max-w-xl text-lg leading-relaxed text-foreground/75">{t.home.oppBody}</p>
-                <Button asChild variant="gold" size="xl" className="mt-10">
-                  <Link to="/submit-proposal">{t.home.oppCta}</Link>
-                </Button>
+                <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                  <Button asChild variant="gold" size="xl">
+                    <Link to="/submit-proposal">{t.home.oppCta}</Link>
+                  </Button>
+                  <Button asChild variant="outline-navy" size="xl">
+                    <Link to="/track-proposal">{t.home.oppTrack}</Link>
+                  </Button>
+                </div>
                 <p className="mt-4 text-xs text-muted-foreground">{t.home.oppNoAccount}</p>
               </div>
               <ul className="grid gap-3">

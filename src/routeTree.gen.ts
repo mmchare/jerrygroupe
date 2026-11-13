@@ -15,8 +15,12 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GlobalPresenceRouteImport } from './routes/global-presence'
 import { Route as LeadershipRouteImport } from './routes/leadership'
 import { Route as SubmitProposalRouteImport } from './routes/submit-proposal'
+import { Route as TrackProposalRouteImport } from './routes/track-proposal'
 import { Route as DivisionsIndexRouteImport } from './routes/divisions.index'
 import { Route as DivisionsSlugRouteImport } from './routes/divisions.$slug'
+import { Route as SupplierTrackRouteImport } from './routes/supplier.track'
+import { Route as SupplierDocumentsTokenRouteImport } from './routes/supplier.documents.$token'
+import { Route as SupplierPortalTokenRouteImport } from './routes/supplier.portal.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -48,6 +52,11 @@ const SubmitProposalRoute = SubmitProposalRouteImport.update({
   path: '/submit-proposal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrackProposalRoute = TrackProposalRouteImport.update({
+  id: '/track-proposal',
+  path: '/track-proposal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DivisionsIndexRoute = DivisionsIndexRouteImport.update({
   id: '/divisions/',
   path: '/divisions/',
@@ -58,6 +67,21 @@ const DivisionsSlugRoute = DivisionsSlugRouteImport.update({
   path: '/divisions/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupplierTrackRoute = SupplierTrackRouteImport.update({
+  id: '/supplier/track',
+  path: '/supplier/track',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupplierDocumentsTokenRoute = SupplierDocumentsTokenRouteImport.update({
+  id: '/supplier/documents/$token',
+  path: '/supplier/documents/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupplierPortalTokenRoute = SupplierPortalTokenRouteImport.update({
+  id: '/supplier/portal/$token',
+  path: '/supplier/portal/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,8 +90,12 @@ export interface FileRoutesByFullPath {
   '/global-presence': typeof GlobalPresenceRoute
   '/leadership': typeof LeadershipRoute
   '/submit-proposal': typeof SubmitProposalRoute
+  '/track-proposal': typeof TrackProposalRoute
   '/divisions/$slug': typeof DivisionsSlugRoute
+  '/supplier/track': typeof SupplierTrackRoute
   '/divisions/': typeof DivisionsIndexRoute
+  '/supplier/documents/$token': typeof SupplierDocumentsTokenRoute
+  '/supplier/portal/$token': typeof SupplierPortalTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,8 +104,12 @@ export interface FileRoutesByTo {
   '/global-presence': typeof GlobalPresenceRoute
   '/leadership': typeof LeadershipRoute
   '/submit-proposal': typeof SubmitProposalRoute
+  '/track-proposal': typeof TrackProposalRoute
   '/divisions/$slug': typeof DivisionsSlugRoute
+  '/supplier/track': typeof SupplierTrackRoute
   '/divisions': typeof DivisionsIndexRoute
+  '/supplier/documents/$token': typeof SupplierDocumentsTokenRoute
+  '/supplier/portal/$token': typeof SupplierPortalTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,8 +119,12 @@ export interface FileRoutesById {
   '/global-presence': typeof GlobalPresenceRoute
   '/leadership': typeof LeadershipRoute
   '/submit-proposal': typeof SubmitProposalRoute
+  '/track-proposal': typeof TrackProposalRoute
   '/divisions/$slug': typeof DivisionsSlugRoute
+  '/supplier/track': typeof SupplierTrackRoute
   '/divisions/': typeof DivisionsIndexRoute
+  '/supplier/documents/$token': typeof SupplierDocumentsTokenRoute
+  '/supplier/portal/$token': typeof SupplierPortalTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,8 +135,12 @@ export interface FileRouteTypes {
     | '/global-presence'
     | '/leadership'
     | '/submit-proposal'
+    | '/track-proposal'
     | '/divisions/$slug'
+    | '/supplier/track'
     | '/divisions/'
+    | '/supplier/documents/$token'
+    | '/supplier/portal/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -109,8 +149,12 @@ export interface FileRouteTypes {
     | '/global-presence'
     | '/leadership'
     | '/submit-proposal'
+    | '/track-proposal'
     | '/divisions/$slug'
+    | '/supplier/track'
     | '/divisions'
+    | '/supplier/documents/$token'
+    | '/supplier/portal/$token'
   id:
     | '__root__'
     | '/'
@@ -119,8 +163,12 @@ export interface FileRouteTypes {
     | '/global-presence'
     | '/leadership'
     | '/submit-proposal'
+    | '/track-proposal'
     | '/divisions/$slug'
+    | '/supplier/track'
     | '/divisions/'
+    | '/supplier/documents/$token'
+    | '/supplier/portal/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -130,8 +178,12 @@ export interface RootRouteChildren {
   GlobalPresenceRoute: typeof GlobalPresenceRoute
   LeadershipRoute: typeof LeadershipRoute
   SubmitProposalRoute: typeof SubmitProposalRoute
+  TrackProposalRoute: typeof TrackProposalRoute
   DivisionsSlugRoute: typeof DivisionsSlugRoute
+  SupplierTrackRoute: typeof SupplierTrackRoute
   DivisionsIndexRoute: typeof DivisionsIndexRoute
+  SupplierDocumentsTokenRoute: typeof SupplierDocumentsTokenRoute
+  SupplierPortalTokenRoute: typeof SupplierPortalTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubmitProposalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/track-proposal': {
+      id: '/track-proposal'
+      path: '/track-proposal'
+      fullPath: '/track-proposal'
+      preLoaderRoute: typeof TrackProposalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/divisions/': {
       id: '/divisions/'
       path: '/divisions'
@@ -192,6 +251,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DivisionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/supplier/track': {
+      id: '/supplier/track'
+      path: '/supplier/track'
+      fullPath: '/supplier/track'
+      preLoaderRoute: typeof SupplierTrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supplier/documents/$token': {
+      id: '/supplier/documents/$token'
+      path: '/supplier/documents/$token'
+      fullPath: '/supplier/documents/$token'
+      preLoaderRoute: typeof SupplierDocumentsTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supplier/portal/$token': {
+      id: '/supplier/portal/$token'
+      path: '/supplier/portal/$token'
+      fullPath: '/supplier/portal/$token'
+      preLoaderRoute: typeof SupplierPortalTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -202,8 +282,12 @@ const rootRouteChildren: RootRouteChildren = {
   GlobalPresenceRoute: GlobalPresenceRoute,
   LeadershipRoute: LeadershipRoute,
   SubmitProposalRoute: SubmitProposalRoute,
+  TrackProposalRoute: TrackProposalRoute,
   DivisionsSlugRoute: DivisionsSlugRoute,
+  SupplierTrackRoute: SupplierTrackRoute,
   DivisionsIndexRoute: DivisionsIndexRoute,
+  SupplierDocumentsTokenRoute: SupplierDocumentsTokenRoute,
+  SupplierPortalTokenRoute: SupplierPortalTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

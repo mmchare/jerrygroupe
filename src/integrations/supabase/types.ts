@@ -168,6 +168,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          message_id: string | null
           mime_type: string
           original_name: string
           proposal_id: string
@@ -177,6 +178,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          message_id?: string | null
           mime_type: string
           original_name: string
           proposal_id: string
@@ -186,6 +188,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          message_id?: string | null
           mime_type?: string
           original_name?: string
           proposal_id?: string
@@ -193,6 +196,13 @@ export type Database = {
           storage_path?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "proposal_attachments_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "proposal_messages"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "proposal_attachments_proposal_id_fkey"
             columns: ["proposal_id"]
@@ -251,6 +261,47 @@ export type Database = {
             columns: ["division_id"]
             isOneToOne: false
             referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proposal_messages: {
+        Row: {
+          author_id: string | null
+          body: string
+          client_message_id: string | null
+          created_at: string
+          direction: string
+          id: string
+          ip_hash: string | null
+          proposal_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          body: string
+          client_message_id?: string | null
+          created_at?: string
+          direction: string
+          id?: string
+          ip_hash?: string | null
+          proposal_id: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          client_message_id?: string | null
+          created_at?: string
+          direction?: string
+          id?: string
+          ip_hash?: string | null
+          proposal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposal_messages_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "proposals"
             referencedColumns: ["id"]
           },
         ]
@@ -448,6 +499,145 @@ export type Database = {
         }
         Relationships: []
       }
+      supplier_access_tokens: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          last_used_at: string | null
+          proposal_id: string
+          purpose: string
+          revoked_at: string | null
+          token_hash: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          last_used_at?: string | null
+          proposal_id: string
+          purpose: string
+          revoked_at?: string | null
+          token_hash: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_used_at?: string | null
+          proposal_id?: string
+          purpose?: string
+          revoked_at?: string | null
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supplier_access_tokens_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      supplier_documents: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          doc_type: Database["public"]["Enums"]["supplier_document_type"]
+          document_group_id: string
+          file_name: string
+          id: string
+          issue_date: string
+          mime_type: string
+          proposal_id: string
+          published_at: string | null
+          reference: string
+          revoked_at: string | null
+          size_bytes: number
+          status: string
+          storage_path: string
+          title_en: string
+          title_fr: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          doc_type: Database["public"]["Enums"]["supplier_document_type"]
+          document_group_id?: string
+          file_name: string
+          id?: string
+          issue_date?: string
+          mime_type?: string
+          proposal_id: string
+          published_at?: string | null
+          reference: string
+          revoked_at?: string | null
+          size_bytes: number
+          status?: string
+          storage_path: string
+          title_en?: string
+          title_fr?: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          doc_type?: Database["public"]["Enums"]["supplier_document_type"]
+          document_group_id?: string
+          file_name?: string
+          id?: string
+          issue_date?: string
+          mime_type?: string
+          proposal_id?: string
+          published_at?: string | null
+          reference?: string
+          revoked_at?: string | null
+          size_bytes?: number
+          status?: string
+          storage_path?: string
+          title_en?: string
+          title_fr?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supplier_documents_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "proposals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tracking_attempts: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string | null
+          reference: string
+          success: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          reference: string
+          success?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string | null
+          reference?: string
+          success?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -467,6 +657,14 @@ export type Database = {
         | "purchase_order_issued"
         | "completed"
         | "archived"
+      supplier_document_type:
+        | "purchase_order"
+        | "contract"
+        | "invoice"
+        | "delivery_document"
+        | "payment_receipt"
+        | "amendment"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -605,6 +803,15 @@ export const Constants = {
         "purchase_order_issued",
         "completed",
         "archived",
+      ],
+      supplier_document_type: [
+        "purchase_order",
+        "contract",
+        "invoice",
+        "delivery_document",
+        "payment_receipt",
+        "amendment",
+        "other",
       ],
     },
   },

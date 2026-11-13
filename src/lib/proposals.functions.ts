@@ -13,6 +13,7 @@ import {
   proposalPayloadSchema,
   validateExtraAnswers,
 } from "./proposal-rules";
+import { issueAccessToken } from "./tracking.functions";
 
 const BUCKET = "proposal-attachments";
 const MAX_PER_IP_PER_HOUR = 5;
@@ -101,7 +102,7 @@ export const createAttachmentUpload = createServerFn({ method: "POST" })
 /* ------------------------------------------------------------------ */
 
 export type SubmitResult =
-  | { ok: true; reference: string; createdAt: string }
+  | { ok: true; reference: string; createdAt: string; trackingToken: string | null }
   | {
       ok: false;
       error: "invalid" | "rateLimited" | "attachmentsMissing" | "submitFailed";
@@ -119,10 +120,10 @@ export const submitProposal = createServerFn({ method: "POST" })
     // Double submission (double click, network retry): return the original reference.
     const { data: already } = await supabaseAdmin
       .from("proposals")
-      .select("reference, created_at")
+      .select("id, reference, created_at")
       .eq("client_submission_id", data.clientSubmissionId)
       .maybeSingle();
-    if (already) return { ok: true, reference: already.reference, createdAt: already.created_at };
+    if (already) return duplicateResult(supabaseAdmin, already);
 
     // Category and its configured specific fields.
     const { data: category } = await supabaseAdmin
@@ -225,10 +226,10 @@ export const submitProposal = createServerFn({ method: "POST" })
       // A concurrent duplicate may have won the race: return its reference.
       const { data: raced } = await supabaseAdmin
         .from("proposals")
-        .select("reference, created_at")
+        .select("id, reference, created_at")
         .eq("client_submission_id", data.clientSubmissionId)
         .maybeSingle();
-      if (raced) return { ok: true, reference: raced.reference, createdAt: raced.created_at };
+      if (raced) return duplicateResult(supabaseAdmin, raced);
       console.error("[proposals] insert failed", insertError?.message);
       return { ok: false, error: "submitFailed" };
     }
@@ -240,5 +241,22 @@ export const submitProposal = createServerFn({ method: "POST" })
       if (attachError) console.error("[proposals] attachment records failed", attachError.message);
     }
 
-    return { ok: true, reference: inserted.reference, createdAt: inserted.created_at };
+    // Individual secure link to Track Your Proposal, shown once on the confirmation screen.
+    const link = await issueAccessToken(supabaseAdmin, inserted.id, "link");
+    return {
+      ok: true,
+      reference: inserted.reference,
+      createdAt: inserted.created_at,
+      trackingToken: link?.token ?? null,
+    };
   });
+
+/** A retried submission gets its original reference; a fresh link only shortly after the first send. */
+async function duplicateResult(
+  db: AdminClient,
+  row: { id: string; reference: string; created_at: string },
+): Promise<SubmitResult> {
+  const recent = Date.now() - new Date(row.created_at).getTime() < 3600_000;
+  const link = recent ? await issueAccessToken(db, row.id, "link") : null;
+  return { ok: true, reference: row.reference, createdAt: row.created_at, trackingToken: link?.token ?? null };
+}

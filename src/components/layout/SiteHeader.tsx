@@ -55,6 +55,9 @@ export function SiteHeader() {
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>
+          <Button asChild variant="outline-navy" className="hidden lg:inline-flex">
+            <Link to="/track-proposal">{t.nav.track}</Link>
+          </Button>
           <Button asChild variant="gold" className="hidden md:inline-flex">
             <Link to="/submit-proposal">{t.nav.submit}</Link>
           </Button>
@@ -84,6 +87,11 @@ export function SiteHeader() {
                 <Button asChild variant="gold" size="xl" className="mt-8">
                   <Link to="/submit-proposal" onClick={() => setOpen(false)}>
                     {t.nav.submit}
+                  </Link>
+                </Button>
+                <Button asChild variant="outline-light" size="xl" className="mt-3">
+                  <Link to="/track-proposal" onClick={() => setOpen(false)}>
+                    {t.nav.track}
                   </Link>
                 </Button>
                 <div className="mt-8">

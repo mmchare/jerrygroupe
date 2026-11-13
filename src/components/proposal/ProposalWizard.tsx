@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { parsePhoneNumberFromString, type CountryCode } from "libphonenumber-js";
-import { Check, Copy, FileText, Loader2, Upload, X } from "lucide-react";
+import { Check, Copy, FileText, Loader2, ShieldCheck, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,7 @@ import {
 } from "@/lib/proposal-rules";
 import { createAttachmentUpload, submitProposal } from "@/lib/proposals.functions";
 import { proposalCategoriesQuery, siteBasicsQuery } from "@/lib/queries";
+import { uploadWithProgress } from "@/lib/upload";
 import { cn } from "@/lib/utils";
 import { Field, inputClass } from "./fields";
 
@@ -81,26 +82,6 @@ function toNumber(v: string): number | undefined | "invalid" {
   return Number.isFinite(n) && n >= 0 ? n : "invalid";
 }
 
-function uploadWithProgress(path: string, token: string, file: File, onProgress: (p: number) => void) {
-  return new Promise<void>((resolve, reject) => {
-    const url = `${import.meta.env['VITE_SUPABASE_URL']}/storage/v1/object/upload/sign/proposal-attachments/${path
-      .split("/")
-      .map(encodeURIComponent)
-      .join("/")}?token=${encodeURIComponent(token)}`;
-    const body = new FormData();
-    body.append("cacheControl", "3600");
-    body.append("", file);
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader("apikey", import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY']);
-    xhr.setRequestHeader("x-upsert", "false");
-    xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(Math.round((e.loaded / e.total) * 100));
-    xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(String(xhr.status))));
-    xhr.onerror = () => reject(new Error("network"));
-    xhr.send(body);
-  });
-}
-
 export function ProposalWizard() {
   const { t, lang } = useI18n();
   const { data: categories } = useSuspenseQuery(proposalCategoriesQuery);
@@ -126,7 +107,7 @@ export function ProposalWizard() {
   const [uploads, setUploads] = useState<UploadItem[]>([]);
   const [accepted, setAccepted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<{ reference: string; createdAt: string } | null>(null);
+  const [result, setResult] = useState<{ reference: string; createdAt: string; trackingToken: string | null } | null>(null);
   const [dragging, setDragging] = useState(false);
 
   const countries = useMemo(() => countryOptions(lang), [lang]);
@@ -247,7 +228,7 @@ export function ProposalWizard() {
           data: { clientSubmissionId: getSubmissionId(), fileName: file.name, size: file.size, mimeType: file.type },
         });
         if (!slot.ok) throw new Error(slot.error);
-        await uploadWithProgress(slot.path, slot.token, file, (p) => patchUpload(id, { progress: p }));
+        await uploadWithProgress("proposal-attachments", slot.path, slot.token, file, (p) => patchUpload(id, { progress: p }));
         patchUpload(id, { status: "done", progress: 100, path: slot.path });
       } catch (err) {
         const code = err instanceof Error && err.message in t.errors ? (err.message as ErrorKey) : "uploadFailed";
@@ -280,7 +261,7 @@ export function ProposalWizard() {
     try {
       const res = await sendProposal({ data: payload });
       if (res.ok) {
-        setResult({ reference: res.reference, createdAt: res.createdAt });
+        setResult({ reference: res.reference, createdAt: res.createdAt, trackingToken: res.trackingToken });
         goTo(4);
       } else {
         if (res.fields) {
@@ -339,6 +320,33 @@ export function ProposalWizard() {
           </Button>
         </div>
         <p className="mt-6 text-sm text-muted-foreground">{t.proposal.confirmation.keep}</p>
+        {result.trackingToken && (
+          <div className="mt-8 border border-gold/50 bg-gold-soft/60 p-6 text-left">
+            <p className="flex items-center gap-2 font-semibold text-navy">
+              <ShieldCheck className="size-5 text-gold" aria-hidden /> {t.proposal.confirmation.trackTitle}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">{t.proposal.confirmation.trackBody}</p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="sm">
+                <Link to="/supplier/portal/$token" params={{ token: result.trackingToken }}>
+                  {t.proposal.confirmation.trackOpen}
+                </Link>
+              </Button>
+              <Button
+                variant="outline-navy"
+                size="sm"
+                onClick={() =>
+                  navigator.clipboard
+                    .writeText(`${window.location.origin}/supplier/portal/${result.trackingToken}`)
+                    .then(() => toast.success(t.proposal.confirmation.trackCopied))
+                }
+              >
+                <Copy /> {t.proposal.confirmation.trackCopy}
+              </Button>
+            </div>
+          </div>
+        )}
+        <p className="mt-4 text-xs text-muted-foreground">{t.proposal.confirmation.trackFallback}</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Button variant="gold" onClick={reset}>{t.proposal.confirmation.another}</Button>
           <Button asChild variant="outline-navy"><Link to="/">{t.proposal.confirmation.home}</Link></Button>

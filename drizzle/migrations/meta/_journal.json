@@ -8,6 +8,13 @@
       "when": 1794526409239,
       "tag": "0000_jerry_group_phase1_foundations",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794529408937,
+      "tag": "0001_supplier_tracking_and_document_center",
+      "breakpoints": true
     }
   ]
 }
