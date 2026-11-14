@@ -45,7 +45,25 @@ export const getPresence = createServerFn({ method: "GET" }).handler(async () =>
     .select("id, region, country_code, city, presence_type, note_en, note_fr, sort_order")
     .order("sort_order");
   if (error) throw new Error(error.message);
-  return data;
+
+  // Qatar is a confirmed group presence but is not yet included in the published
+  // locations table. Keep it visible until the managed content is updated there.
+  const hasQatar = data.some((location) => location.country_code === "QA");
+  return hasQatar
+    ? data
+    : [
+        ...data,
+        {
+          id: "local-presence-qatar",
+          region: "asia",
+          country_code: "QA",
+          city: null,
+          presence_type: null,
+          note_en: "",
+          note_fr: "",
+          sort_order: 5,
+        },
+      ].sort((a, b) => a.sort_order - b.sort_order);
 });
 
 export const getLeadership = createServerFn({ method: "GET" }).handler(async () => {
