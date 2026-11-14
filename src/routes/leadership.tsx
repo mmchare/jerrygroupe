@@ -26,7 +26,7 @@ const LOCAL_PORTRAITS: Record<string, string> = {
   drjerryarey: "/Dr.%20Jerry%20A.%20Rey.jpeg",
   draranmaree: "/Dr%20Aran%20maree.jpeg",
   jonathanimerman: "/Jonathan%20imerman.jpeg",
-  princealthaniofqatar: "/Emir%20Tamim%20bin%20Hamad%20Al-Thani.jpg",
+  emirtamimbinhamadalthani: "/Emir%20Tamim%20bin%20Hamad%20Al-Thani.jpg",
 };
 
 function normalizeName(name: string): string {
