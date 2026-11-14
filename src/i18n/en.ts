@@ -474,6 +474,28 @@ export const en = {
     linkExpired: "Your session has expired. Please verify your access again.",
     linkDenied: "This document is not available.",
   },
+  chat: {
+    open: "Ask our assistant",
+    close: "Close assistant",
+    title: "JERRY GROUP Assistant",
+    subtitle: "Answers about the group, its divisions and proposals",
+    welcome: "Good day. How may I help you?",
+    welcomeBody: "Ask me about JERRY GROUP, its six divisions, its global presence or how to submit and track a proposal.",
+    suggestions: [
+      "What are the group's six divisions?",
+      "How do I submit a proposal?",
+      "How can I track my proposal?",
+      "Where is JERRY GROUP based?",
+    ],
+    placeholder: "Type your question…",
+    thinking: "Preparing an answer…",
+    reset: "New conversation",
+    send: "Send",
+    stop: "Stop",
+    disclaimer: "AI-powered assistant. Answers are for information only and do not constitute any commitment by JERRY GROUP.",
+    error: "The assistant is temporarily unavailable. Please try again.",
+    tooLong: "Please keep your question under 1,500 characters.",
+  },
 };
 
 export type Dictionary = typeof en;

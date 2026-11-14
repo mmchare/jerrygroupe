@@ -16,6 +16,7 @@ import { Route as GlobalPresenceRouteImport } from './routes/global-presence'
 import { Route as LeadershipRouteImport } from './routes/leadership'
 import { Route as SubmitProposalRouteImport } from './routes/submit-proposal'
 import { Route as TrackProposalRouteImport } from './routes/track-proposal'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as DivisionsIndexRouteImport } from './routes/divisions.index'
 import { Route as DivisionsSlugRouteImport } from './routes/divisions.$slug'
 import { Route as SupplierTrackRouteImport } from './routes/supplier.track'
@@ -57,6 +58,11 @@ const TrackProposalRoute = TrackProposalRouteImport.update({
   path: '/track-proposal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DivisionsIndexRoute = DivisionsIndexRouteImport.update({
   id: '/divisions/',
   path: '/divisions/',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/leadership': typeof LeadershipRoute
   '/submit-proposal': typeof SubmitProposalRoute
   '/track-proposal': typeof TrackProposalRoute
+  '/api/chat': typeof ApiChatRoute
   '/divisions/$slug': typeof DivisionsSlugRoute
   '/supplier/track': typeof SupplierTrackRoute
   '/divisions/': typeof DivisionsIndexRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/leadership': typeof LeadershipRoute
   '/submit-proposal': typeof SubmitProposalRoute
   '/track-proposal': typeof TrackProposalRoute
+  '/api/chat': typeof ApiChatRoute
   '/divisions/$slug': typeof DivisionsSlugRoute
   '/supplier/track': typeof SupplierTrackRoute
   '/divisions': typeof DivisionsIndexRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/leadership': typeof LeadershipRoute
   '/submit-proposal': typeof SubmitProposalRoute
   '/track-proposal': typeof TrackProposalRoute
+  '/api/chat': typeof ApiChatRoute
   '/divisions/$slug': typeof DivisionsSlugRoute
   '/supplier/track': typeof SupplierTrackRoute
   '/divisions/': typeof DivisionsIndexRoute
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/leadership'
     | '/submit-proposal'
     | '/track-proposal'
+    | '/api/chat'
     | '/divisions/$slug'
     | '/supplier/track'
     | '/divisions/'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/leadership'
     | '/submit-proposal'
     | '/track-proposal'
+    | '/api/chat'
     | '/divisions/$slug'
     | '/supplier/track'
     | '/divisions'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/leadership'
     | '/submit-proposal'
     | '/track-proposal'
+    | '/api/chat'
     | '/divisions/$slug'
     | '/supplier/track'
     | '/divisions/'
@@ -179,6 +191,7 @@ export interface RootRouteChildren {
   LeadershipRoute: typeof LeadershipRoute
   SubmitProposalRoute: typeof SubmitProposalRoute
   TrackProposalRoute: typeof TrackProposalRoute
+  ApiChatRoute: typeof ApiChatRoute
   DivisionsSlugRoute: typeof DivisionsSlugRoute
   SupplierTrackRoute: typeof SupplierTrackRoute
   DivisionsIndexRoute: typeof DivisionsIndexRoute
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrackProposalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/divisions/': {
       id: '/divisions/'
       path: '/divisions'
@@ -283,6 +303,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeadershipRoute: LeadershipRoute,
   SubmitProposalRoute: SubmitProposalRoute,
   TrackProposalRoute: TrackProposalRoute,
+  ApiChatRoute: ApiChatRoute,
   DivisionsSlugRoute: DivisionsSlugRoute,
   SupplierTrackRoute: SupplierTrackRoute,
   DivisionsIndexRoute: DivisionsIndexRoute,

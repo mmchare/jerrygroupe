@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import { I18nProvider, readClientLang } from "@/i18n/I18nProvider";
 import { DEFAULT_LANG, isLang, type Lang } from "@/i18n";
 import { getServerLang } from "@/i18n/lang.functions";
@@ -163,6 +164,7 @@ function RootComponent() {
           </main>
           <SiteFooter />
         </div>
+        <ChatWidget />
         <Toaster position="top-center" />
       </I18nProvider>
     </QueryClientProvider>
