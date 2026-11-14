@@ -15,6 +15,18 @@ export const Route = createFileRoute("/leadership")({
   component: LeadershipPage,
 });
 
+const LOCAL_PORTRAITS: Record<string, string> = {
+  drjerryarey: "/Dr.%20Jerry%20A.%20Rey.jpeg",
+  draranmaree: "/Dr%20Aran%20maree.jpeg",
+  jonathanimer man: "/Jonathan%20imerman.jpeg",
+};
+
+function portraitFor(name: string, portraitUrl: string | null): string | null {
+  if (portraitUrl) return portraitUrl;
+  const key = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return LOCAL_PORTRAITS[key] ?? null;
+}
+
 function initials(name: string) {
   return name
     .replace(/^(Dr\.?|Prince)\s+/i, "")
@@ -36,10 +48,11 @@ function LeadershipPage() {
           {data.map((m) => {
             const name = pick(m, "name", lang);
             const bio = pick(m, "bio", lang);
+            const portrait = portraitFor(name, m.portrait_url);
             return (
               <article key={m.id} className="border border-border bg-card shadow-card">
-                {m.portrait_url ? (
-                  <img src={m.portrait_url} alt={name} className="aspect-[4/5] w-full object-cover" />
+                {portrait ? (
+                  <img src={portrait} alt={name} className="aspect-[4/5] w-full object-cover" />
                 ) : (
                   <div className="relative grid aspect-[4/5] place-items-center bg-navy-gradient">
                     <span className="font-display text-5xl text-gold">{initials(name)}</span>
