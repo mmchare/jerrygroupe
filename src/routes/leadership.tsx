@@ -36,6 +36,13 @@ const LOCAL_PORTRAITS: Record<string, string> = {
   davidsantosmba: "/DAVID%20SANTOS.jpg",
 };
 
+const LEADERSHIP_EMAILS: Record<string, string> = {
+  drjerryarey: "jerryrey@jerrytradinggroup.com",
+  draranmaree: "aranmaree@jerrytradinggroup.com",
+  jonathanimerman: "jonathanimerman@jerrytradinggroup.com",
+  davidsantosmba: "davidsantos@jerrytradinggroup.com",
+};
+
 function normalizeName(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
@@ -77,6 +84,7 @@ function MemberCard({ member, featured }: { member: LeadershipMember; featured?:
   const name = displayName(member, lang);
   const bio = pick(member, "bio", lang);
   const portrait = portraitFor(member, name);
+  const email = LEADERSHIP_EMAILS[normalizeName(name)];
   const expertise = pick(member, "expertise", lang)
     .split("|")
     .map((s) => s.trim())
@@ -108,6 +116,14 @@ function MemberCard({ member, featured }: { member: LeadershipMember; featured?:
       <div className={featured ? "p-8 md:p-10" : "p-6 md:p-7"}>
         <h2 className={featured ? "text-3xl text-navy" : "text-xl text-navy"}>{name}</h2>
         <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-gold">{pick(member, "role", lang)}</p>
+        {email && (
+          <a
+            href={`mailto:${email}`}
+            className="mt-2 inline-block text-sm text-navy underline decoration-gold/60 underline-offset-4 transition-colors hover:text-gold"
+          >
+            {email}
+          </a>
+        )}
         {country && (
           <p className="mt-1 text-xs uppercase tracking-[0.14em] text-muted-foreground">
             JERRY GROUP | {countryName(country, lang)} <span aria-hidden>{flag(country)}</span>
