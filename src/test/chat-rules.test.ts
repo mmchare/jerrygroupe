@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createRateLimiter, isAcceptableQuestion, trimHistory } from "@/lib/chat/chat-rules";
+import { createRateLimiter, isAcceptableQuestion, resolveVisitorKey, trimHistory } from "@/lib/chat/chat-rules";
 
 const msg = (role: "user" | "assistant", text: string) => ({ role, parts: [{ type: "text", text }] });
 
@@ -30,5 +30,19 @@ describe("site assistant limits", () => {
     expect(allow("ip", start + 21)).toBe(false);
     expect(allow("other-ip", start + 21)).toBe(true);
     expect(allow("ip", start + 10 * 60 * 1000 + 1)).toBe(true);
+  });
+});
+
+describe("assistant relay from other deployments", () => {
+  const relayHeaders = (secret: string) =>
+    new Headers({ "x-forwarded-for": "203.0.113.9", "x-jg-relay-secret": secret, "x-jg-visitor-ip": "198.51.100.7" });
+
+  it("counts the real visitor when the relay presents the right secret", () => {
+    expect(resolveVisitorKey(relayHeaders("s3cret-value"), "s3cret-value")).toBe("relay:198.51.100.7");
+  });
+
+  it("ignores a forwarded visitor address without the right secret", () => {
+    expect(resolveVisitorKey(relayHeaders("wrong-value!"), "s3cret-value")).toBe("203.0.113.9");
+    expect(resolveVisitorKey(relayHeaders("s3cret-value"), undefined)).toBe("203.0.113.9");
   });
 });

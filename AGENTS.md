@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Site assistant
+- The assistant calls Lovable AI only from the Lovable-hosted deployment; any deployment without `LOVABLE_API_KEY` (e.g. Vercel) relays `/api/chat` server-to-server to it (`ASSISTANT_UPSTREAM_URL`, `ASSISTANT_RELAY_SECRET`). Why: the managed key cannot leave Lovable, and the shared secret keeps per-visitor rate limits.

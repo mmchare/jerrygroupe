@@ -43,3 +43,28 @@ export function createRateLimiter(limit = CHAT_RATE_LIMIT, windowMs = CHAT_RATE_
     return true;
   };
 }
+
+export const RELAY_SECRET_HEADER = "x-jg-relay-secret";
+export const RELAY_VISITOR_HEADER = "x-jg-visitor-ip";
+
+/** Constant-time comparison so the relay secret can't be guessed byte by byte. */
+export function sameSecret(a: string, b: string): boolean {
+  if (!a || !b || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+/**
+ * Who is asking, for rate limiting. A trusted relay (another copy of the site holding the shared
+ * secret) may pass on the real visitor address; anyone else is identified by their own address.
+ */
+export function resolveVisitorKey(headers: Headers, relaySecret: string | undefined): string {
+  const own =
+    headers.get("cf-connecting-ip") ?? headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const forwarded = headers.get(RELAY_VISITOR_HEADER)?.trim();
+  if (forwarded && relaySecret && sameSecret(headers.get(RELAY_SECRET_HEADER) ?? "", relaySecret)) {
+    return `relay:${forwarded}`;
+  }
+  return own;
+}

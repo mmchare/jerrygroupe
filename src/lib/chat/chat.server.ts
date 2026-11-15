@@ -1,12 +1,22 @@
 import { APICallError, convertToModelMessages, safeValidateUIMessages, type UIMessage } from "ai";
 
 import { isLang, type Lang } from "@/i18n";
-import { createRateLimiter, isAcceptableQuestion, trimHistory } from "./chat-rules";
+import {
+  createRateLimiter,
+  isAcceptableQuestion,
+  RELAY_SECRET_HEADER,
+  RELAY_VISITOR_HEADER,
+  resolveVisitorKey,
+  trimHistory,
+} from "./chat-rules";
 import { getSiteKnowledge } from "./knowledge.server";
 import { createResponsesCall } from "./responses.server";
 
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1";
 const MODEL = "openai/gpt-6-astra";
+// Lovable-hosted copy of the site that holds the AI key; other deployments (e.g. Vercel) relay to it.
+const DEFAULT_UPSTREAM = "https://jerry-six-division-portal.lovable.app";
+const RELAYED_HEADER = "x-jg-relayed";
 
 // Per-instance guard; complements the per-message and history caps.
 const allowVisitor = createRateLimiter();
@@ -48,18 +58,66 @@ function json(status: number, error: string) {
   });
 }
 
-function visitorKey(request: Request) {
+function clientAddress(request: Request) {
   return (
     request.headers.get("cf-connecting-ip") ??
+    request.headers.get("x-real-ip") ??
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "unknown"
+    ""
   );
+}
+
+/**
+ * Deployments without LOVABLE_API_KEY (such as Vercel) forward the visitor's question, server to
+ * server, to the Lovable-hosted site, which answers with Lovable AI. The key never leaves Lovable.
+ */
+export async function relayChat(request: Request, rawBody: string, lang: Lang): Promise<Response> {
+  const copy = ERRORS[lang];
+  if (request.headers.get(RELAYED_HEADER)) {
+    console.error("[chat] relayed request reached a deployment without LOVABLE_API_KEY");
+    return json(500, copy.unavailable);
+  }
+  const upstreamBase = (process.env["ASSISTANT_UPSTREAM_URL"] || DEFAULT_UPSTREAM).replace(/\/+$/, "");
+  if (upstreamBase === new URL(request.url).origin) return json(500, copy.unavailable);
+
+  const headers = new Headers({ "content-type": "application/json", [RELAYED_HEADER]: "1" });
+  const secret = process.env["ASSISTANT_RELAY_SECRET"];
+  const visitor = clientAddress(request);
+  if (secret && visitor) {
+    headers.set(RELAY_SECRET_HEADER, secret);
+    headers.set(RELAY_VISITOR_HEADER, visitor);
+  }
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${upstreamBase}/api/chat`, {
+      method: "POST",
+      headers,
+      body: rawBody,
+      signal: request.signal,
+    });
+  } catch (error) {
+    if (request.signal.aborted) return new Response(null, { status: 499 });
+    console.error("[chat] relay failed", error);
+    return json(502, copy.unavailable);
+  }
+
+  const out = new Headers({ "cache-control": "no-cache" });
+  for (const [name, value] of upstream.headers) {
+    const lower = name.toLowerCase();
+    if (lower === "content-type" || lower === "x-vercel-ai-ui-message-stream" || lower.startsWith("x-lovable-aig-")) {
+      out.set(name, value);
+    }
+  }
+  return new Response(upstream.body, { status: upstream.status, headers: out });
 }
 
 export async function handleChat(request: Request): Promise<Response> {
   let body: { messages?: unknown; lang?: unknown };
+  let rawBody: string;
   try {
-    body = (await request.json()) as typeof body;
+    rawBody = await request.text();
+    body = JSON.parse(rawBody) as typeof body;
   } catch {
     return json(400, ERRORS.en.invalid);
   }
@@ -68,12 +126,12 @@ export async function handleChat(request: Request): Promise<Response> {
 
   const validated = await safeValidateUIMessages<UIMessage>({ messages: body.messages });
   if (!validated.success || !isAcceptableQuestion(validated.data)) return json(400, copy.invalid);
-  if (!allowVisitor(visitorKey(request))) return json(429, copy.rate);
 
   const apiKey = process.env["LOVABLE_API_KEY"];
-  if (!apiKey) {
-    console.error("[chat] LOVABLE_API_KEY is not configured");
-    return json(500, copy.unavailable);
+  if (!apiKey) return relayChat(request, rawBody, lang);
+
+  if (!allowVisitor(resolveVisitorKey(request.headers, process.env["ASSISTANT_RELAY_SECRET"]))) {
+    return json(429, copy.rate);
   }
 
   let knowledge: string;
