@@ -51,9 +51,9 @@ export async function getSiteKnowledge(lang: Lang): Promise<string> {
 
   lines.push("", "## Leadership (page: /leadership)");
   for (const m of leadership.data ?? []) {
-    const expertise = (lang === "fr" ? m.expertise_fr : m.expertise_en) ?? [];
+    const expertise = pick(m, "expertise", lang);
     lines.push(
-      `- ${pick(m, "name", lang)} — ${pick(m, "role", lang)}${pick(m, "bio", lang) ? `. ${pick(m, "bio", lang)}` : ""}${expertise.length ? ` (${expertise.join(", ")})` : ""}`,
+      `- ${pick(m, "name", lang)} — ${pick(m, "role", lang)}${pick(m, "bio", lang) ? `. ${pick(m, "bio", lang)}` : ""}${expertise ? ` (${expertise})` : ""}`,
     );
   }
 
