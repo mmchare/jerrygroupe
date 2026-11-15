@@ -18,7 +18,7 @@ export async function getSiteKnowledge(lang: Lang): Promise<string> {
       .order("sort_order"),
     db.from("site_settings").select("key, value_en, value_fr"),
     db.from("presence_locations").select("region, country_code, city, note_en, note_fr, sort_order").order("sort_order"),
-    db.from("leadership_members").select("name_en, name_fr, role_en, role_fr, bio_en, bio_fr, expertise_en, expertise_fr, sort_order").order("sort_order"),
+    db.from("leadership_members").select("name_en, name_fr, role_en, role_fr, bio_en, bio_fr, expertise_en, expertise_fr, highlights, sort_order").order("sort_order"),
     db.from("proposal_categories").select("name_en, name_fr, description_en, description_fr, sort_order").order("sort_order"),
   ]);
   for (const r of [divisions, settings, presence, leadership, categories]) {
@@ -52,8 +52,13 @@ export async function getSiteKnowledge(lang: Lang): Promise<string> {
   lines.push("", "## Leadership (page: /leadership)");
   for (const m of leadership.data ?? []) {
     const expertise = pick(m, "expertise", lang);
+    const highlights = Array.isArray(m.highlights)
+      ? (m.highlights as Record<string, unknown>[])
+          .map((h) => `${String(h.value ?? "")} ${pick(h, "label", lang)}`.trim())
+          .filter(Boolean)
+      : [];
     lines.push(
-      `- ${pick(m, "name", lang)} — ${pick(m, "role", lang)}${pick(m, "bio", lang) ? `. ${pick(m, "bio", lang)}` : ""}${expertise ? ` (${expertise})` : ""}`,
+      `- ${pick(m, "name", lang)} — ${pick(m, "role", lang)}${pick(m, "bio", lang) ? `. ${pick(m, "bio", lang)}` : ""}${expertise ? ` (${expertise})` : ""}${highlights.length ? ` Key achievements: ${highlights.join("; ")}.` : ""}`,
     );
   }
 

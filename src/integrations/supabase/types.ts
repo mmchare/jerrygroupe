@@ -75,9 +75,11 @@ export type Database = {
         Row: {
           bio_en: string | null
           bio_fr: string | null
+          country_code: string | null
           created_at: string
           expertise_en: string | null
           expertise_fr: string | null
+          highlights: Json
           id: string
           is_published: boolean
           name_en: string
@@ -91,9 +93,11 @@ export type Database = {
         Insert: {
           bio_en?: string | null
           bio_fr?: string | null
+          country_code?: string | null
           created_at?: string
           expertise_en?: string | null
           expertise_fr?: string | null
+          highlights?: Json
           id?: string
           is_published?: boolean
           name_en: string
@@ -107,9 +111,11 @@ export type Database = {
         Update: {
           bio_en?: string | null
           bio_fr?: string | null
+          country_code?: string | null
           created_at?: string
           expertise_en?: string | null
           expertise_fr?: string | null
+          highlights?: Json
           id?: string
           is_published?: boolean
           name_en?: string

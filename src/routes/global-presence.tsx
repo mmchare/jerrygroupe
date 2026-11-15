@@ -46,9 +46,10 @@ function PresencePage() {
                         {countryName(p.country_code, lang)}
                         {p.city ? ` — ${p.city}` : ""}
                       </p>
-                      {p.presence_type && (
+                      {(p.presence_type || pick(p, "note", lang)) && (
                         <p className="mt-0.5 text-xs uppercase tracking-wider text-gold">
-                          {pick(p, "note", lang) || t.presence.types[p.presence_type as keyof typeof t.presence.types]}
+                          {pick(p, "note", lang) ||
+                            t.presence.types[p.presence_type as keyof typeof t.presence.types]}
                         </p>
                       )}
                     </li>

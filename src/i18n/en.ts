@@ -133,7 +133,8 @@ export const en = {
   leadership: {
     eyebrow: "Leadership",
     title: "Leadership & Governance",
-    lead: "JERRY GROUP is led by its President, Dr. Jerry A. Rey, alongside the group's founding members.",
+    lead: "JERRY GROUP is led by its Founder and President, Dr. Jerry A. Rey, alongside the group's founding members and senior executives.",
+    achievements: "Key professional achievements",
     portraitPending: "Official portrait to come",
     bioPending: "Official biography to be published.",
     expertise: "Expertise",

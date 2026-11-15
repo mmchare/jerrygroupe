@@ -15,6 +15,13 @@
       "when": 1794529408937,
       "tag": "0001_supplier_tracking_and_document_center",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794704099132,
+      "tag": "0002_leadership_highlights_country",
+      "breakpoints": true
     }
   ]
 }

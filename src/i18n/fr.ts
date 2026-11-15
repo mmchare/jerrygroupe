@@ -135,7 +135,8 @@ export const fr: Dictionary = {
   leadership: {
     eyebrow: "Direction",
     title: "Direction et gouvernance",
-    lead: "JERRY GROUP est dirigé par son Président, le Dr Jerry A. Rey, aux côtés des membres fondateurs du groupe.",
+    lead: "JERRY GROUP est dirigé par son Fondateur et Président, le Dr Jerry A. Rey, aux côtés des membres fondateurs et des dirigeants du groupe.",
+    achievements: "Principales réalisations professionnelles",
     portraitPending: "Portrait officiel à venir",
     bioPending: "Biographie officielle à paraître.",
     expertise: "Domaine d’expertise",

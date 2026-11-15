@@ -71,7 +71,7 @@ export const getLeadership = createServerFn({ method: "GET" }).handler(async () 
   const { data, error } = await getPublicDb()
     .from("leadership_members")
     .select(
-      "id, name_en, name_fr, role_en, role_fr, bio_en, bio_fr, expertise_en, expertise_fr, portrait_url, sort_order",
+      "id, name_en, name_fr, role_en, role_fr, bio_en, bio_fr, expertise_en, expertise_fr, portrait_url, country_code, highlights, sort_order",
     )
     .order("sort_order");
   if (error) throw new Error(error.message);
