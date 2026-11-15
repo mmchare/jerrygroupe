@@ -6,7 +6,6 @@ import { dictionaries, langFromMatches, pageMeta, pick, type Lang } from "@/i18n
 import { useI18n } from "@/i18n/I18nProvider";
 import { countryName } from "@/lib/countries";
 import { leadershipQuery } from "@/lib/queries";
-import davidSantosPortrait from "@/assets/david-santos.jpg.asset.json";
 
 type Highlight = { value?: string; label_en?: string; label_fr?: string };
 
@@ -34,7 +33,7 @@ const LOCAL_PORTRAITS: Record<string, string> = {
   draranmaree: "/Dr%20Aran%20maree.jpeg",
   jonathanimerman: "/Jonathan%20imerman.jpeg",
   emirtamimbinhamadalthani: "/Emir%20Tamim%20bin%20Hamad%20Al-Thani.jpg",
-  davidsantosmba: davidSantosPortrait.url,
+  davidsantosmba: "/DAVID%20SANTOS.jpg",
 };
 
 function normalizeName(name: string): string {
