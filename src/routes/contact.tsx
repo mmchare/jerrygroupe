@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
+import { ContactForm } from "@/components/contact/ContactForm";
 import { PageHeader } from "@/components/site/PageHeader";
 import { dictionaries, langFromMatches, pageMeta } from "@/i18n";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -41,6 +42,9 @@ function ContactPage() {
               {s("website").replace(/^https?:\/\//, "")}
             </a>
           </div>
+        </div>
+        <div className="container-page mt-12">
+          <ContactForm />
         </div>
         <div className="container-page mt-12">
           <div className="flex flex-col items-start justify-between gap-6 bg-navy-gradient p-10 text-ivory md:flex-row md:items-center">

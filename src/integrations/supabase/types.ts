@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_messages: {
+        Row: {
+          client_message_id: string
+          company_name: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          ip_hash: string | null
+          language: string
+          message: string
+          recipient: string
+          subject: string
+        }
+        Insert: {
+          client_message_id: string
+          company_name?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          ip_hash?: string | null
+          language?: string
+          message: string
+          recipient?: string
+          subject: string
+        }
+        Update: {
+          client_message_id?: string
+          company_name?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          ip_hash?: string | null
+          language?: string
+          message?: string
+          recipient?: string
+          subject?: string
+        }
+        Relationships: []
+      }
       divisions: {
         Row: {
           created_at: string

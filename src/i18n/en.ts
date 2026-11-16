@@ -192,6 +192,30 @@ export const en = {
     proposalBody:
       "To present a product, an artwork, a resource or an opportunity, please use the dedicated proposal portal. Every submission receives a unique reference.",
     proposalCta: "Submit a proposal",
+    form: {
+      eyebrow: "Write to us",
+      title: "Send us a message",
+      intro: "Write to the JERRY GROUP team. We reply to the email address you provide.",
+      fullName: "Full name",
+      email: "Email address",
+      company: "Company or organisation",
+      subject: "Subject",
+      message: "Message",
+      privacy: "Your details are used only to answer your message.",
+      send: "Send message",
+      sending: "Sending…",
+      sentTitle: "Message received",
+      sentBody: "Thank you. Your message has been received by the JERRY GROUP team.",
+      another: "Send another message",
+      rateLimited: "Too many messages have been sent recently. Please try again later.",
+      failed: "Your message could not be sent. Please try again in a moment.",
+      errors: {
+        required: "This field is required.",
+        email: "Please enter a valid email address.",
+        tooLong: "This text is too long.",
+        tooShort: "Please write a little more.",
+      },
+    },
   },
   footer: {
     about:

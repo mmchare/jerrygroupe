@@ -194,6 +194,30 @@ export const fr: Dictionary = {
     proposalBody:
       "Pour présenter un produit, une œuvre d’art, une ressource ou une opportunité, utilisez le portail de propositions dédié. Chaque soumission reçoit une référence unique.",
     proposalCta: "Soumettre une proposition",
+    form: {
+      eyebrow: "Nous écrire",
+      title: "Envoyez-nous un message",
+      intro: "Écrivez à l’équipe JERRY GROUP. Nous répondons à l’adresse e-mail que vous indiquez.",
+      fullName: "Nom complet",
+      email: "Adresse e-mail",
+      company: "Société ou organisation",
+      subject: "Objet",
+      message: "Message",
+      privacy: "Vos coordonnées servent uniquement à répondre à votre message.",
+      send: "Envoyer le message",
+      sending: "Envoi…",
+      sentTitle: "Message reçu",
+      sentBody: "Merci. Votre message a bien été reçu par l’équipe JERRY GROUP.",
+      another: "Envoyer un autre message",
+      rateLimited: "Trop de messages ont été envoyés récemment. Veuillez réessayer plus tard.",
+      failed: "Votre message n’a pas pu être envoyé. Veuillez réessayer dans un instant.",
+      errors: {
+        required: "Ce champ est obligatoire.",
+        email: "Veuillez saisir une adresse e-mail valide.",
+        tooLong: "Ce texte est trop long.",
+        tooShort: "Veuillez développer un peu votre message.",
+      },
+    },
   },
   footer: {
     about:

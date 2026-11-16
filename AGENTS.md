@@ -31,3 +31,6 @@ use the editor.
 
 ## Site assistant
 - The assistant calls Lovable AI only from the Lovable-hosted deployment; any deployment without `LOVABLE_API_KEY` (e.g. Vercel) relays `/api/chat` server-to-server to it (`ASSISTANT_UPSTREAM_URL`, `ASSISTANT_RELAY_SECRET`). Why: the managed key cannot leave Lovable, and the shared secret keeps per-visitor rate limits.
+
+## Contact form
+- Contact-page messages are stored server-side in `contact_messages` (service role only, no public access) via `sendContactMessage`; owner email notification is added only once a verified sender domain exists. Why: messages must never be lost when email cannot send.
