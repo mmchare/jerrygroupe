@@ -54,7 +54,7 @@ export async function getSiteKnowledge(lang: Lang): Promise<string> {
     const expertise = pick(m, "expertise", lang);
     const highlights = Array.isArray(m.highlights)
       ? (m.highlights as Record<string, unknown>[])
-          .map((h) => `${String(h.value ?? "")} ${pick(h, "label", lang)}`.trim())
+          .map((h) => `${String(h["value"] ?? "")} ${pick(h, "label", lang)}`.trim())
           .filter(Boolean)
       : [];
     lines.push(
