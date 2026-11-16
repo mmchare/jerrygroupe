@@ -37,7 +37,7 @@ const LOCAL_PORTRAITS: Record<string, string> = {
 };
 
 const LEADERSHIP_EMAILS: Record<string, string> = {
-  drjerryarey: "jerryrey@jerrytradinggroup.com",
+  drjerryarey: "reyjerry@jerrytradinggroup.com",
   draranmaree: "aranmaree@jerrytradinggroup.com",
   jonathanimerman: "jonathanimerman@jerrytradinggroup.com",
   davidsantosmba: "davidsantos@jerrytradinggroup.com",
