@@ -41,7 +41,7 @@ const LEADERSHIP_EMAILS: Record<string, string> = {
   draranmaree: "aranmaree@jerrytradinggroup.com",
   jonathanimerman: "jonathanimerman@jerrytradinggroup.com",
   davidsantosmba: "davidsantos@jerrytradinggroup.com",
-  emirtamimbinhamadalthani: "EmirTamimbinHamadAlThani@jerrytradinggroup.com",
+  emirtamimbinhamadalthani: "rmirtamimbinhamadalthani@jerrytradinggroup.com",
 };
 
 function normalizeName(name: string): string {
