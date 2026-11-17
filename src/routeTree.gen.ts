@@ -10,27 +10,41 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminAuthRouteImport } from './routes/admin-auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GlobalPresenceRouteImport } from './routes/global-presence'
 import { Route as LeadershipRouteImport } from './routes/leadership'
 import { Route as SubmitProposalRouteImport } from './routes/submit-proposal'
 import { Route as TrackProposalRouteImport } from './routes/track-proposal'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as DivisionsIndexRouteImport } from './routes/divisions.index'
 import { Route as DivisionsSlugRouteImport } from './routes/divisions.$slug'
 import { Route as SupplierTrackRouteImport } from './routes/supplier.track'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as SupplierDocumentsTokenRouteImport } from './routes/supplier.documents.$token'
 import { Route as SupplierPortalTokenRouteImport } from './routes/supplier.portal.$token'
+import { Route as AuthenticatedAdminProposalsProposalIdRouteImport } from './routes/_authenticated/admin.proposals.$proposalId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAuthRoute = AdminAuthRouteImport.update({
+  id: '/admin-auth',
+  path: '/admin-auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -58,6 +72,11 @@ const TrackProposalRoute = TrackProposalRouteImport.update({
   path: '/track-proposal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -78,6 +97,11 @@ const SupplierTrackRoute = SupplierTrackRouteImport.update({
   path: '/supplier/track',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const SupplierDocumentsTokenRoute = SupplierDocumentsTokenRouteImport.update({
   id: '/supplier/documents/$token',
   path: '/supplier/documents/$token',
@@ -88,25 +112,36 @@ const SupplierPortalTokenRoute = SupplierPortalTokenRouteImport.update({
   path: '/supplier/portal/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminProposalsProposalIdRoute =
+  AuthenticatedAdminProposalsProposalIdRouteImport.update({
+    id: '/proposals/$proposalId',
+    path: '/proposals/$proposalId',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-auth': typeof AdminAuthRoute
   '/contact': typeof ContactRoute
   '/global-presence': typeof GlobalPresenceRoute
   '/leadership': typeof LeadershipRoute
   '/submit-proposal': typeof SubmitProposalRoute
   '/track-proposal': typeof TrackProposalRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/divisions/$slug': typeof DivisionsSlugRoute
   '/supplier/track': typeof SupplierTrackRoute
   '/divisions/': typeof DivisionsIndexRoute
   '/supplier/documents/$token': typeof SupplierDocumentsTokenRoute
   '/supplier/portal/$token': typeof SupplierPortalTokenRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/proposals/$proposalId': typeof AuthenticatedAdminProposalsProposalIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-auth': typeof AdminAuthRoute
   '/contact': typeof ContactRoute
   '/global-presence': typeof GlobalPresenceRoute
   '/leadership': typeof LeadershipRoute
@@ -118,43 +153,55 @@ export interface FileRoutesByTo {
   '/divisions': typeof DivisionsIndexRoute
   '/supplier/documents/$token': typeof SupplierDocumentsTokenRoute
   '/supplier/portal/$token': typeof SupplierPortalTokenRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/proposals/$proposalId': typeof AuthenticatedAdminProposalsProposalIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/admin-auth': typeof AdminAuthRoute
   '/contact': typeof ContactRoute
   '/global-presence': typeof GlobalPresenceRoute
   '/leadership': typeof LeadershipRoute
   '/submit-proposal': typeof SubmitProposalRoute
   '/track-proposal': typeof TrackProposalRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/divisions/$slug': typeof DivisionsSlugRoute
   '/supplier/track': typeof SupplierTrackRoute
   '/divisions/': typeof DivisionsIndexRoute
   '/supplier/documents/$token': typeof SupplierDocumentsTokenRoute
   '/supplier/portal/$token': typeof SupplierPortalTokenRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/proposals/$proposalId': typeof AuthenticatedAdminProposalsProposalIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/admin-auth'
     | '/contact'
     | '/global-presence'
     | '/leadership'
     | '/submit-proposal'
     | '/track-proposal'
+    | '/admin'
     | '/api/chat'
     | '/divisions/$slug'
     | '/supplier/track'
     | '/divisions/'
     | '/supplier/documents/$token'
     | '/supplier/portal/$token'
+    | '/admin/'
+    | '/admin/proposals/$proposalId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/admin-auth'
     | '/contact'
     | '/global-presence'
     | '/leadership'
@@ -166,26 +213,35 @@ export interface FileRouteTypes {
     | '/divisions'
     | '/supplier/documents/$token'
     | '/supplier/portal/$token'
+    | '/admin'
+    | '/admin/proposals/$proposalId'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
+    | '/admin-auth'
     | '/contact'
     | '/global-presence'
     | '/leadership'
     | '/submit-proposal'
     | '/track-proposal'
+    | '/_authenticated/admin'
     | '/api/chat'
     | '/divisions/$slug'
     | '/supplier/track'
     | '/divisions/'
     | '/supplier/documents/$token'
     | '/supplier/portal/$token'
+    | '/_authenticated/admin/'
+    | '/_authenticated/admin/proposals/$proposalId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AdminAuthRoute: typeof AdminAuthRoute
   ContactRoute: typeof ContactRoute
   GlobalPresenceRoute: typeof GlobalPresenceRoute
   LeadershipRoute: typeof LeadershipRoute
@@ -208,11 +264,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-auth': {
+      id: '/admin-auth'
+      path: '/admin-auth'
+      fullPath: '/admin-auth'
+      preLoaderRoute: typeof AdminAuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -250,6 +320,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrackProposalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -278,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierTrackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/supplier/documents/$token': {
       id: '/supplier/documents/$token'
       path: '/supplier/documents/$token'
@@ -292,12 +376,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierPortalTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/proposals/$proposalId': {
+      id: '/_authenticated/admin/proposals/$proposalId'
+      path: '/proposals/$proposalId'
+      fullPath: '/admin/proposals/$proposalId'
+      preLoaderRoute: typeof AuthenticatedAdminProposalsProposalIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminProposalsProposalIdRoute: typeof AuthenticatedAdminProposalsProposalIdRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminProposalsProposalIdRoute:
+    AuthenticatedAdminProposalsProposalIdRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AdminAuthRoute: AdminAuthRoute,
   ContactRoute: ContactRoute,
   GlobalPresenceRoute: GlobalPresenceRoute,
   LeadershipRoute: LeadershipRoute,

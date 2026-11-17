@@ -21,6 +21,7 @@ import { I18nProvider, readClientLang } from "@/i18n/I18nProvider";
 import { DEFAULT_LANG, isLang, type Lang } from "@/i18n";
 import { getServerLang } from "@/i18n/lang.functions";
 import { siteBasicsQuery } from "@/lib/queries";
+import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
   return (

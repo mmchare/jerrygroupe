@@ -29,6 +29,13 @@
       "when": 1794787759144,
       "tag": "0003_create_contact_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794912138223,
+      "tag": "0004_create_admin_user_roles",
+      "breakpoints": true
     }
   ]
 }
