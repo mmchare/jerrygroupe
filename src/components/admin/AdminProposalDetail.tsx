@@ -146,7 +146,7 @@ function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="text-xs uppercase tracking-wider text-muted-foreground">{label}</dt>
-      <dd className="mt-1.5 break-words text-sm font-medium capitalize-first text-navy">{value}</dd>
+      <dd className="mt-1.5 break-words text-sm font-medium text-navy">{value}</dd>
     </div>
   );
 }

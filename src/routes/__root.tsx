@@ -153,19 +153,31 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { lang } = Route.useLoaderData();
+  const router = useRouter();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const isAdminArea = pathname.startsWith("/admin");
+
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
+      void router.invalidate();
+      if (event !== "SIGNED_OUT") void queryClient.invalidateQueries();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [queryClient, router]);
 
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider initialLang={lang}>
         <div className="flex min-h-screen flex-col">
-          <SiteHeader />
+          {!isAdminArea && <SiteHeader />}
           <main id="main" className="flex-1">
             {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
             <Outlet />
           </main>
-          <SiteFooter />
+          {!isAdminArea && <SiteFooter />}
         </div>
-        <ChatWidget />
+        {!isAdminArea && <ChatWidget />}
         <Toaster position="top-center" />
       </I18nProvider>
     </QueryClientProvider>

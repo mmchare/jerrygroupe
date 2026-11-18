@@ -49,15 +49,15 @@ export function AdminDocumentManager({ proposalId, documents }: { proposalId: st
     await queryClient.invalidateQueries({ queryKey: ["admin", "proposal", proposalId] });
   }
 
-  function prepareVersion(document: AdminDocument) {
-    setGroupId(document.groupId);
-    setDocType(document.type);
-    setReference(document.reference);
-    setTitleEn(document.titleEn);
-    setTitleFr(document.titleFr);
+  function prepareVersion(selectedDocument: AdminDocument) {
+    setGroupId(selectedDocument.groupId);
+    setDocType(selectedDocument.type);
+    setReference(selectedDocument.reference);
+    setTitleEn(selectedDocument.titleEn);
+    setTitleFr(selectedDocument.titleFr);
     setFile(null);
     if (fileInput.current) fileInput.current.value = "";
-    document.getElementById("document-publication")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.document.getElementById("document-publication")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   async function submit(event: FormEvent) {
