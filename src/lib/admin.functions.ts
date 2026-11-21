@@ -30,7 +30,6 @@ const ATTACHMENTS_BUCKET = "proposal-attachments";
 const DOCUMENTS_BUCKET = "supplier-documents";
 
 type AuthContext = { supabase: SupabaseClient<Database>; userId: string };
-type AdminClient = Awaited<typeof import("@/integrations/supabase/client.server")>["context.supabase"];
 
 async function isAdmin(context: AuthContext): Promise<boolean> {
   const { data, error } = await context.supabase.rpc("has_role", {
@@ -95,7 +94,7 @@ export const getAdminProposals = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     privateResponse();
     await requireAdmin(context);
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const db = context.supabase;
     const { data: rows, error } = await db
       .from("proposals")
       .select(
@@ -103,7 +102,10 @@ export const getAdminProposals = createServerFn({ method: "POST" })
       )
       .order("created_at", { ascending: false })
       .limit(500);
-    if (error) throw new Error("Unable to load proposals");
+    if (error) {
+      console.error("[admin] proposals load failed", error.message);
+      throw new Error(`Unable to load proposals: ${error.message}`);
+    }
 
     const summaries: AdminProposalSummary[] = (rows ?? []).map((row) => {
       const category = Array.isArray(row.proposal_categories)
@@ -214,7 +216,7 @@ export const getAdminProposal = createServerFn({ method: "POST" })
   .handler(async ({ data, context }): Promise<AdminProposalDetail> => {
     privateResponse();
     await requireAdmin(context);
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const db = context.supabase;
     const [proposalRes, attachmentsRes, messagesRes, historyRes, documentsRes] = await Promise.all([
       db
         .from("proposals")
@@ -324,7 +326,7 @@ export const updateAdminProposalStatus = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     privateResponse();
     await requireAdmin(context);
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const db = context.supabase;
     const { data: current } = await db
       .from("proposals")
       .select("status")
@@ -367,7 +369,7 @@ export const sendAdminMessage = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     privateResponse();
     await requireAdmin(context);
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const db = context.supabase;
     const { error } = await db.from("proposal_messages").insert({
       proposal_id: data.proposalId,
       direction: "to_supplier",
@@ -386,7 +388,7 @@ export const createAdminDocumentUpload = createServerFn({ method: "POST" })
     await requireAdmin(context);
     const problem = adminDocumentProblem({ name: data.fileName, size: data.size, type: data.mimeType });
     if (problem) throw new Error(problem);
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const db = context.supabase;
     const { data: proposal } = await db.from("proposals").select("id").eq("id", data.proposalId).single();
     if (!proposal) throw new Error("Proposal not found");
     const path = `admin/${data.proposalId}/${crypto.randomUUID()}.pdf`;
@@ -408,7 +410,7 @@ export const publishAdminDocument = createServerFn({ method: "POST" })
     if (!data.path.startsWith(`${folder}/`) || data.path.slice(folder.length + 1).includes("/")) {
       throw new Error("Invalid document path");
     }
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const db = context.supabase;
     const name = data.path.slice(folder.length + 1);
     const { data: listed, error: listError } = await db.storage.from(DOCUMENTS_BUCKET).list(folder, { limit: 1000 });
     const object = listed?.find((entry) => entry.name === name);
@@ -470,7 +472,7 @@ export const revokeAdminDocument = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     privateResponse();
     await requireAdmin(context);
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const db = context.supabase;
     const { data: revoked, error } = await db
       .from("supplier_documents")
       .update({ status: "revoked" })
@@ -497,7 +499,7 @@ export const getAdminFileLink = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     privateResponse();
     await requireAdmin(context);
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const db = context.supabase;
     let bucket: string;
     let path: string;
     let fileName: string;
