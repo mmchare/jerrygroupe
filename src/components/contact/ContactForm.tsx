@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, Loader2, Mail, Send } from "lucide-react";
+import { Check, Loader2, Mail, MessageCircle, Send } from "lucide-react";
 
 import { Field, inputClass } from "@/components/proposal/fields";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,8 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { CONTACT_INBOX, contactFieldErrors, type ContactFieldError } from "@/lib/contact-rules";
 import { sendContactMessage } from "@/lib/contact.functions";
 
+const CONTACT_WHATSAPP = "+447482666769";
+const CONTACT_WHATSAPP_URL = "https://wa.me/447482666769";
 const empty = { fullName: "", email: "", companyName: "", subject: "", message: "", website: "" };
 type FormState = typeof empty;
 
@@ -71,16 +73,28 @@ export function ContactForm() {
 
   return (
     <form onSubmit={submit} noValidate className="border border-gold/60 bg-card p-6 shadow-card md:p-10" aria-labelledby="contact-form-title">
-      <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <p className="eyebrow">{f.eyebrow}</p>
           <h2 id="contact-form-title" className="mt-3 text-3xl text-navy">{f.title}</h2>
           <p className="mt-2 max-w-xl text-muted-foreground">{f.intro}</p>
         </div>
-        <a href={`mailto:${CONTACT_INBOX}`} className="inline-flex items-center gap-2 text-sm font-medium text-navy underline-offset-4 hover:underline">
-          <Mail className="size-4 text-gold" aria-hidden />
-          {CONTACT_INBOX}
-        </a>
+        <div className="flex flex-col items-start gap-3 md:items-end">
+          <a href={`mailto:${CONTACT_INBOX}`} className="inline-flex items-center gap-2 text-sm font-medium text-navy underline-offset-4 hover:underline">
+            <Mail className="size-4 text-gold" aria-hidden />
+            {CONTACT_INBOX}
+          </a>
+          <a
+            href={CONTACT_WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label={`WhatsApp ${CONTACT_WHATSAPP}`}
+            className="inline-flex items-center gap-2 text-sm font-medium text-navy underline-offset-4 hover:underline"
+          >
+            <MessageCircle className="size-4 text-gold" aria-hidden />
+            WhatsApp&nbsp;{CONTACT_WHATSAPP}
+          </a>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-5 md:grid-cols-2">
