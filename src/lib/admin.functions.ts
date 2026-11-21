@@ -30,10 +30,10 @@ const ATTACHMENTS_BUCKET = "proposal-attachments";
 const DOCUMENTS_BUCKET = "supplier-documents";
 
 type AuthContext = { supabase: SupabaseClient<Database>; userId: string };
-type AdminClient = Awaited<typeof import("@/integrations/supabase/client.server")>["context.supabase"];
+type AdminClient = Awaited<typeof import("@/integrations/supabase/client.server")>["supabaseAdmin"];
 
 async function isAdmin(context: AuthContext): Promise<boolean> {
-  const { data, error } = await context.supabase.rpc("has_role", {
+  const { data, error } = await supabaseAdmin.rpc("has_role", {
     _user_id: context.userId,
     _role: "admin",
   });
@@ -66,7 +66,7 @@ export const getAdminSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     privateResponse();
-    const { data: userData } = await context.supabase.auth.getUser();
+    const { data: userData } = await supabaseAdmin.auth.getUser();
     return {
       email: userData.user?.email ?? "",
       isAdmin: await isAdmin(context),
@@ -95,7 +95,7 @@ export const getAdminProposals = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     privateResponse();
     await requireAdmin(context);
-    const { context.supabase: db } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await db
       .from("proposals")
       .select(
