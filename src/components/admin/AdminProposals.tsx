@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, FileText, Search } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ArrowRight, FileText, RefreshCw, Search } from "lucide-react";
 
 import { StatusBadge } from "@/components/tracking/StatusBadge";
 import { formatDate } from "@/components/tracking/format";
@@ -12,11 +12,28 @@ import { useI18n } from "@/i18n/I18nProvider";
 import { adminProposalsQuery } from "@/lib/admin-queries";
 import { PROPOSAL_STATUSES, type ProposalStatus } from "@/lib/tracking-rules";
 
+function describeError(error: unknown): string {
+  if (error instanceof Error && error.message) return error.message;
+  if (typeof error === "object" && error !== null && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message) return message;
+  }
+  return "Erreur inconnue lors du chargement.";
+}
+
 export function AdminProposals() {
   const { t } = useI18n();
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"all" | ProposalStatus>("all");
-  const { data, isPending, error } = useQuery(adminProposalsQuery(search, status === "all" ? undefined : status));
+  const { data, isPending, error, refetch, isFetching } = useQuery(
+    adminProposalsQuery(search, status === "all" ? undefined : status),
+  );
+
+  async function refresh() {
+    await queryClient.invalidateQueries({ queryKey: ["admin", "proposals"] });
+    await refetch();
+  }
 
   return (
     <div className="space-y-8">
@@ -50,7 +67,13 @@ export function AdminProposals() {
       {isPending ? (
         <div className="border border-border bg-card p-12 text-center text-muted-foreground">Chargement des propositions…</div>
       ) : error ? (
-        <div role="alert" className="border border-destructive/30 bg-destructive/10 p-6 text-destructive">Impossible de charger les propositions. Actualisez la page.</div>
+        <div role="alert" className="border border-destructive/30 bg-destructive/10 p-6 text-destructive">
+          <p className="font-semibold">Impossible de charger les propositions.</p>
+          <p className="mt-2 text-sm">{describeError(error)}</p>
+          <Button type="button" variant="outline-navy" className="mt-4" disabled={isFetching} onClick={() => void refresh()}>
+            <RefreshCw className={isFetching ? "animate-spin" : ""} /> Actualiser
+          </Button>
+        </div>
       ) : data?.proposals.length === 0 ? (
         <div className="border border-dashed border-input bg-card p-12 text-center">
           <FileText className="mx-auto size-8 text-gold" aria-hidden />
