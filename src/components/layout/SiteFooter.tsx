@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { MessageCircle } from "lucide-react";
 
 import { pick } from "@/i18n";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -7,6 +8,9 @@ import { siteBasicsQuery } from "@/lib/queries";
 import { Logo } from "./Logo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useNavItems } from "./SiteHeader";
+
+const CONTACT_WHATSAPP = "+447482666769";
+const CONTACT_WHATSAPP_URL = "https://wa.me/447482666769";
 
 export function SiteFooter() {
   const { t, lang } = useI18n();
@@ -21,6 +25,16 @@ export function SiteFooter() {
         <div>
           <Logo tone="light" />
           <p className="mt-6 max-w-xs text-sm leading-relaxed text-ivory/70">{t.footer.about}</p>
+          <a
+            href={CONTACT_WHATSAPP_URL}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label={`WhatsApp ${CONTACT_WHATSAPP}`}
+            className="mt-5 inline-flex items-center gap-2 text-sm text-ivory/75 transition-colors hover:text-gold"
+          >
+            <MessageCircle className="size-4 text-gold" aria-hidden />
+            WhatsApp&nbsp;{CONTACT_WHATSAPP}
+          </a>
           <div className="mt-6">
             <LanguageSwitcher tone="light" />
           </div>
